@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<body>
+<style>
+  p {
+    font-family: sans-serif;
+  }
+</style>
+
+<p>NOTE: This will not work in Chrome unless served via HTTPS or localhost.</p>
+<p>Browser Object Model includes Navigator object.</p>
+<p>The Navigator object has a geolocation property.</p>
+
+<p>Click the button to get your coordinates.</p>
+
+<input type="button" value="Try it ..." onclick="getLocation()"/>
+
+<p id="demo"></p>
+
+<script>
+const loc_elem = document.getElementById("demo");
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else { 
+        loc_elem.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function showPosition(position) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    loc_elem.innerHTML = `${latitude} Latitude <br>${longitude} Longitude`;
+
+    // ✅ Using your desired Google Maps URL format
+    const url = `https://www.google.ca/maps/search/?api=1&query=${latitude},${longitude}`;
+
+    loc_elem.innerHTML += `<br><br><a href="${url}" target="_blank" rel="noopener">Open in Google Maps</a>`;
+}
+
+function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            loc_elem.innerHTML = "User denied the request for Geolocation.";
+            break;
+        case error.POSITION_UNAVAILABLE:
+            loc_elem.innerHTML = "Location information is unavailable.";
+            break;
+        case error.TIMEOUT:
+            loc_elem.innerHTML = "The request to get user location timed out.";
+            break;
+        default:
+            loc_elem.innerHTML = "An unknown error occurred.";
+    }
+}
+</script>
+
+</body>
+</html>
